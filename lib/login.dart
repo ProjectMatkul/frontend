@@ -47,8 +47,8 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           Image.asset(
             "assets/images/lg.png",
-            width: 350,
-            height: 250,
+            width: 380,
+            height: 320,
           ),
         ],
       ),
@@ -66,6 +66,7 @@ class _LoginPageState extends State<LoginPage> {
               topRight: Radius.circular(30),
             ),
           ),
+          margin: EdgeInsets.zero,
           child: Padding(
             padding: const EdgeInsets.all(32.0),
             child: _buildForm(),
@@ -98,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
           style: TextStyle(
               color: myColor, fontSize: 32, fontWeight: FontWeight.w500),
         ),
-        _buildSectionWithMargin(_buildGreyText("Silahkan Login"), 0),
+        // _buildSectionWithMargin(_buildGreyText("Silahkan Login"), 0),
         const SizedBox(height: 30),
         _buildGreyText("Email address"),
         _buildInputField(emailController),
