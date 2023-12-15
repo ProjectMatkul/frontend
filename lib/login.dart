@@ -39,38 +39,53 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildTop() {
-    return SizedBox(
+    return Container(
+      margin: EdgeInsets.only(top: 0.0),
       width: mediaSize.width,
-      child: const Column(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            "WARMINDO",
-            style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 40,
-                letterSpacing: 2),
-          )
+          Image.asset(
+            "assets/images/lg.png",
+            width: 350,
+            height: 250,
+          ),
         ],
       ),
     );
   }
 
   Widget _buildBottom() {
-    return SizedBox(
-      width: mediaSize.width,
-      child: Card(
-        shape: const RoundedRectangleBorder(
+    return Expanded(
+      child: SizedBox(
+        width: mediaSize.width,
+        child: Card(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30),
-        )),
-        child: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: _buildForm(),
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: _buildForm(),
+          ),
         ),
       ),
+    );
+  }
+
+  Container _buildSectionWithMargin(Widget child, double marginTop) {
+    return Container(
+      margin: EdgeInsets.only(top: 10.0),
+      child: child,
+    );
+  }
+
+  Container _buildSectionWithMarginBottom(Widget child, double marginTop) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 30.0),
+      child: child,
     );
   }
 
@@ -83,13 +98,14 @@ class _LoginPageState extends State<LoginPage> {
           style: TextStyle(
               color: myColor, fontSize: 32, fontWeight: FontWeight.w500),
         ),
-        _buildGreyText("Silahkan Login"),
-        const SizedBox(height: 60),
+        _buildSectionWithMargin(_buildGreyText("Silahkan Login"), 0),
+        const SizedBox(height: 30),
         _buildGreyText("Email address"),
         _buildInputField(emailController),
-        const SizedBox(height: 40),
+        const SizedBox(height: 30),
         _buildGreyText("Password"),
-        _buildInputField(passwordController, isPassword: true),
+        _buildSectionWithMarginBottom(
+            _buildInputField(passwordController, isPassword: true), 0),
         const SizedBox(height: 20),
         _buildLoginButton(),
       ],
