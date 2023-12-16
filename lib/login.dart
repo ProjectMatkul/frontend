@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:warmindo_app/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -133,6 +134,11 @@ class _LoginPageState extends State<LoginPage> {
       onPressed: () {
         debugPrint("Email : ${emailController.text}");
         debugPrint("Password : ${passwordController.text}");
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
       },
       style: ElevatedButton.styleFrom(
         shape: const StadiumBorder(),
