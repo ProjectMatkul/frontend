@@ -1,5 +1,5 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class UpdateRolePage extends StatefulWidget {
@@ -13,13 +13,15 @@ class UpdateRolePage extends StatefulWidget {
 }
 
 class _UpdateRolePageState extends State<UpdateRolePage> {
+  String role = '';
+  String status = 'Aktif'; // Default status "Aktif"
   TextEditingController roleController = TextEditingController();
 
-  Future<void> updateRole() async {
+  Future<void> editRole() async {
     final url = Uri.parse('http://localhost:3000/api/pemilik/editRole');
 
     try {
-      final response = await http.post(
+      final response = await http.put(
         url,
         headers: {
           'Content-Type': 'application/json',
@@ -27,19 +29,49 @@ class _UpdateRolePageState extends State<UpdateRolePage> {
         body: json.encode({
           'idrole': widget.roleId,
           'role': roleController.text,
-          'status': 'Aktif', // Sesuaikan dengan kebutuhan Anda
+          'status': status,
         }),
       );
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        print(responseData['message']); // Tampilkan pesan dari backend
-        Navigator.pop(context);
+        print(responseData['message']); // Show backend response message
+        Navigator.pop(context); // Kembali ke halaman sebelumnya
       } else {
         final errorMessage = json.decode(response.body)['message'];
         print(errorMessage);
       }
     } catch (error) {
+      print('Error: $error');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchRoleDetails(); // Panggil fungsi untuk mendapatkan detail role saat inisialisasi halaman
+  }
+
+  Future<void> fetchRoleDetails() async {
+    final url = Uri.parse(
+        'http://localhost:3000/api/pemilik/roleDetails/${widget.roleId}');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        setState(() {
+          role = responseData['role'];
+          status = responseData['status'];
+          roleController.text = role;
+        });
+      } else {
+        // Tangani jika gagal mendapatkan detail role
+        print('Gagal mendapatkan detail role');
+      }
+    } catch (error) {
+      // Tangani error dari HTTP request
       print('Error: $error');
     }
   }
@@ -53,7 +85,6 @@ class _UpdateRolePageState extends State<UpdateRolePage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
@@ -61,11 +92,34 @@ class _UpdateRolePageState extends State<UpdateRolePage> {
               decoration: InputDecoration(labelText: 'Role'),
             ),
             SizedBox(height: 16.0),
+            DropdownButton<String>(
+              value: status,
+              icon: Icon(Icons.arrow_downward),
+              iconSize: 24,
+              elevation: 16,
+              underline: Container(
+                height: 2,
+                color: Colors.blueAccent,
+              ),
+              onChanged: (String? newValue) {
+                setState(() {
+                  status = newValue!;
+                });
+              },
+              items: <String>['Aktif', 'Tidak Aktif']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+            SizedBox(height: 24.0),
             ElevatedButton(
               onPressed: () {
-                updateRole(); // Panggil fungsi updateRole saat tombol ditekan
+                editRole(); // Panggil fungsi editRole saat tombol ditekan
               },
-              child: Text('Update Role'),
+              child: Text('Simpan Perubahan'),
             ),
           ],
         ),

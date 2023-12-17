@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:warmindo_app/pages/dashboard_page.dart';
 
 import 'form_role.dart';
+import 'update_role.dart';
 
 class RoleListPage extends StatefulWidget {
   final String accessToken;
@@ -63,6 +64,18 @@ class _RoleListPageState extends State<RoleListPage> {
     }
   }
 
+  void navigateToUpdateRolePage(int roleId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UpdateRolePage(
+          accessToken: widget.accessToken,
+          roleId: roleId.toString(),
+        ),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -105,6 +118,13 @@ class _RoleListPageState extends State<RoleListPage> {
                         onPressed: () {
                           // Call deleteRole function when delete button is pressed
                           deleteRole(roles[index]['idrole']);
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          // Call navigateToUpdateRolePage function when edit button is pressed
+                          navigateToUpdateRolePage(roles[index]['idrole']);
                         },
                       ),
                     ],
