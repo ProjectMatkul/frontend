@@ -20,7 +20,7 @@ class _FormPageState extends State<FormPage> {
   TextEditingController fotoController = TextEditingController();
 
   Future<void> tambahPengguna() async {
-    final url = Uri.parse('http://localhost:3000/api/pemilik/addPengguna');
+    final url = Uri.parse('http://10.0.2.2:3000/api/pemilik/addPengguna');
 
     try {
       final response = await http.post(

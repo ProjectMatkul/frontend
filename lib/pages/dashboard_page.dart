@@ -54,12 +54,12 @@ class _DashboardPageState extends State<DashboardPage> {
                 const SizedBox(height: 50),
                 ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 30),
-                  title: Text('Hello Ahad!',
+                  title: Text('Halo Ahad!',
                       style: Theme.of(context)
                           .textTheme
                           .headlineSmall
                           ?.copyWith(color: Colors.white)),
-                  subtitle: Text('Good Morning',
+                  subtitle: Text('Selamat Datang di Warmindo App!',
                       style: Theme.of(context)
                           .textTheme
                           .titleMedium
@@ -73,118 +73,120 @@ class _DashboardPageState extends State<DashboardPage> {
               ],
             ),
           ),
-          Container(
-            color: Theme.of(context).primaryColor,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(200)),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 40,
+                  mainAxisSpacing: 30,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        // Implement your logic for 'Videos' button here
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.deepOrange, // Background color
+                        onPrimary: Colors.white, // Text color
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(CupertinoIcons.shopping_cart),
+                          const SizedBox(height: 10),
+                          Text('Warung'),
+                        ],
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Implement your logic for 'Analytics' button here
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.green, // Background color
+                        onPrimary: Colors.white, // Text color
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(CupertinoIcons.chart_bar),
+                          const SizedBox(height: 10),
+                          Center(
+                            child: Text(
+                              'Data Transaksi',
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Implement your logic for 'Manajemen Akun' button here
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => UserListPage(
+                              accessToken: widget.accessToken,
+                            ),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Color.fromARGB(255, 255, 115, 248),
+                        onPrimary: Colors.white,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(CupertinoIcons.person),
+                          const SizedBox(height: 10),
+                          Center(
+                            child: Text(
+                              'Manajemen Akun',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Implement your logic for 'Manajemen Akun' button here
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RoleListPage(
+                              accessToken: widget.accessToken,
+                            ),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Color.fromARGB(255, 164, 115, 255),
+                        onPrimary: Colors.white,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(CupertinoIcons.graph_circle),
+                          const SizedBox(height: 10),
+                          Text('Manajemen Role'),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              child: GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 2,
-                crossAxisSpacing: 40,
-                mainAxisSpacing: 30,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      // Implement your logic for 'Videos' button here
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.deepOrange, // Background color
-                      onPrimary: Colors.white, // Text color
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(CupertinoIcons.shopping_cart),
-                        const SizedBox(height: 10),
-                        Text('Warung'),
-                      ],
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Implement your logic for 'Analytics' button here
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.green, // Background color
-                      onPrimary: Colors.white, // Text color
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(CupertinoIcons.chart_bar),
-                        const SizedBox(height: 10),
-                        Center(
-                          child: Text(
-                            'Data Transaksi',
-                            textAlign: TextAlign.center,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Implement your logic for 'Manajemen Akun' button here
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => UserListPage(
-                            accessToken: widget.accessToken,
-                          ),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 255, 115, 248),
-                      onPrimary: Colors.white,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(CupertinoIcons.person),
-                        const SizedBox(height: 10),
-                        Center(
-                          child: Text(
-                            'Manajemen Akun',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Implement your logic for 'Manajemen Akun' button here
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RoleListPage(
-                            accessToken: widget.accessToken,
-                          ),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 164, 115, 255),
-                      onPrimary: Colors.white,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(CupertinoIcons.graph_circle),
-                        const SizedBox(height: 10),
-                        Text('Manajemen Role'),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            ],
           ),
           const SizedBox(height: 20)
         ],

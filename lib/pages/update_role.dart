@@ -18,7 +18,7 @@ class _UpdateRolePageState extends State<UpdateRolePage> {
   TextEditingController roleController = TextEditingController();
 
   Future<void> editRole() async {
-    final url = Uri.parse('http://localhost:3000/api/pemilik/editRole');
+    final url = Uri.parse('http://10.0.2.2:3000/api/pemilik/editRole');
 
     try {
       final response = await http.put(

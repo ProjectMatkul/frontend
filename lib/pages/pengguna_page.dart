@@ -18,7 +18,7 @@ class _UserListPageState extends State<UserListPage> {
   List<dynamic> users = []; // Simpan data pengguna di sini
 
   Future<void> fetchUsers() async {
-    final url = Uri.parse('http://localhost:3000/api/pemilik/viewUser');
+    final url = Uri.parse('http://10.0.2.2:3000/api/pemilik/viewUser');
 
     try {
       final response = await http.get(
@@ -43,7 +43,7 @@ class _UserListPageState extends State<UserListPage> {
   }
 
   Future<void> deleteUser(String userId) async {
-    final url = Uri.parse('http://localhost:3000/api/pemilik/deleteUser');
+    final url = Uri.parse('http://10.0.2.2:3000/api/pemilik/deleteUser');
 
     try {
       final response = await http.post(
@@ -79,6 +79,7 @@ class _UserListPageState extends State<UserListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Daftar Pengguna'),
+        centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -101,7 +102,25 @@ class _UserListPageState extends State<UserListPage> {
               itemCount: users.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(users[index]['username']),
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(users[index]['foto']),
+                  ),
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "ID Pengguna: ${users[index]['idpengguna']}",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text("Username: ${users[index]['username']}"),
+                      // Text("Password: ${users[index]['password']}"),
+                      Text("Nama Pengguna: ${users[index]['namapengguna']}"),
+                      Text("Role Pengguna: ${users[index]['role']}"),
+                    ],
+                  ),
                   trailing: IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {

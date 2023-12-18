@@ -13,7 +13,7 @@ class LoginPage extends StatefulWidget {
 
 Future<void> loginUser(
     String email, String password, BuildContext context) async {
-  final url = Uri.parse('http://localhost:3000/api/auth/login');
+  final url = Uri.parse('http://10.0.2.2:3000/api/auth/login');
 
   try {
     final response = await http.post(
@@ -101,6 +101,7 @@ class _LoginPageState extends State<LoginPage> {
               topRight: Radius.circular(30),
             ),
           ),
+          margin: EdgeInsets.zero,
           child: Padding(
             padding: const EdgeInsets.all(32.0),
             child: _buildForm(),
