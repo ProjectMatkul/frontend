@@ -1,13 +1,49 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:warmindo_app/pages/pengguna_page.dart';
 import 'package:warmindo_app/pages/role_page.dart';
+import 'package:http/http.dart' as http;
+
+import 'login_page.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   runApp(const MyHomePage());
+}
+
+// frontend
+Future<void> logout(BuildContext context, String accessToken) async {
+  final url = Uri.parse('http://10.0.2.2:3000/api/auth/logout');
+  try {
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      print(responseData['message']);
+
+      // Navigasi ke halaman login setelah logout berhasil
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginPage(),
+        ),
+      );
+    } else {
+      final errorMessage = json.decode(response.body)['message'];
+      print(errorMessage);
+    }
+  } catch (error) {
+    print('Error: $error');
+  }
 }
 
 class MyHomePage extends StatelessWidget {
@@ -28,8 +64,9 @@ class MyHomePage extends StatelessWidget {
 
 class DashboardPage extends StatefulWidget {
   final String accessToken; // Akses token disimpan di sini
+  final String idpengguna; // Tambahkan atribut userId
 
-  DashboardPage({required this.accessToken});
+  DashboardPage({required this.accessToken, required this.idpengguna});
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
@@ -181,6 +218,31 @@ class _DashboardPageState extends State<DashboardPage> {
                           const SizedBox(height: 10),
                           Text('Manajemen Role'),
                         ],
+                      ),
+                    ),
+                    SizedBox(height: 16), // Add spacing
+                    Container(
+                      alignment: Alignment.bottomCenter,
+                      margin: EdgeInsets.only(
+                          bottom: 0), // Adjust the margin as needed
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          // Panggil fungsi logout dengan menyediakan parameter context
+                          await logout(context, widget.accessToken);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          fixedSize: Size.fromHeight(40),
+                          primary: Colors.red,
+                          onPrimary: Colors.white,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.exit_to_app),
+                            const SizedBox(width: 10),
+                            Text('Logout'),
+                          ],
+                        ),
                       ),
                     ),
                   ],

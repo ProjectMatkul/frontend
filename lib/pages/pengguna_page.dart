@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 import 'dashboard_page.dart';
 import 'form_page.dart';
+import 'update_pengguna.dart';
 
 class UserListPage extends StatefulWidget {
   final String accessToken;
@@ -16,6 +17,18 @@ class UserListPage extends StatefulWidget {
 
 class _UserListPageState extends State<UserListPage> {
   List<dynamic> users = []; // Simpan data pengguna di sini
+
+  void navigateToUpdatePenggunaPage(String penggunaId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UpdatePenggunaPage(
+          accessToken: widget.accessToken,
+          penggunaId: penggunaId,
+        ),
+      ),
+    );
+  }
 
   Future<void> fetchUsers() async {
     final url = Uri.parse('http://10.0.2.2:3000/api/pemilik/viewUser');
@@ -76,6 +89,10 @@ class _UserListPageState extends State<UserListPage> {
 
   @override
   Widget build(BuildContext context) {
+    String accessToken = widget.accessToken;
+
+// Menggunakan nilai dari accessToken sebagai indeks (misalnya, dengan mengonversi ke int)
+    int index = int.tryParse(accessToken) ?? 0;
     return Scaffold(
       appBar: AppBar(
         title: Text('Daftar Pengguna'),
@@ -88,6 +105,7 @@ class _UserListPageState extends State<UserListPage> {
               MaterialPageRoute(
                 builder: (context) => DashboardPage(
                   accessToken: widget.accessToken,
+                  idpengguna: users[index]['idpengguna'],
                 ),
               ),
             );
@@ -118,15 +136,28 @@ class _UserListPageState extends State<UserListPage> {
                       Text("Username: ${users[index]['username']}"),
                       // Text("Password: ${users[index]['password']}"),
                       Text("Nama Pengguna: ${users[index]['namapengguna']}"),
-                      Text("Role Pengguna: ${users[index]['role']}"),
+                      Text("Role Pengguna: ${users[index]['Role']['role']}"),
                     ],
                   ),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      // Panggil fungsi deleteUser saat tombol delete ditekan dengan ID pengguna tertentu
-                      deleteUser(users[index]['idpengguna']);
-                    },
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          // Panggil fungsi deleteUser saat tombol delete ditekan dengan ID pengguna tertentu
+                          deleteUser(users[index]['idpengguna']);
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          // Panggil fungsi navigateToUpdateUserPage saat tombol edit ditekan dengan ID pengguna tertentu
+                          navigateToUpdatePenggunaPage(
+                              users[index]['idpengguna']);
+                        },
+                      ),
+                    ],
                   ),
                   // Tambahkan informasi pengguna lainnya sesuai kebutuhan
                 );
