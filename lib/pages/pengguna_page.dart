@@ -30,6 +30,7 @@ class _UserListPageState extends State<UserListPage> {
   TextEditingController idroleController = TextEditingController();
   TextEditingController statusController = TextEditingController();
   TextEditingController fotoController = TextEditingController();
+  String? imgUrl;
 
   Future<void> fetchUsers() async {
     final url = Uri.parse('http://10.0.2.2:3000/api/pemilik/viewUser');
@@ -79,7 +80,7 @@ class _UserListPageState extends State<UserListPage> {
 
   Future<void> fetchUserDetails(String userId) async {
     final url =
-        Uri.parse('http://localhost:3000/api/pemilik/userDetails/$userId');
+        Uri.parse('http://10.0.2.2:3000/api/pemilik/userDetails/$userId');
 
     try {
       final response = await http.get(url);
@@ -161,14 +162,34 @@ class _UserListPageState extends State<UserListPage> {
               itemCount: users.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(users[index]['namapengguna']),
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                        "http://10.0.2.2:3000${users[index]['foto']}" ??
+                            'https://i.stack.imgur.com/5AfMD.png'),
+                  ),
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "ID Pengguna: ${users[index]['idpengguna']}",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text("Username: ${users[index]['username']}"),
+                      // Text("Password: ${users[index]['password']}"),
+                      Text("Nama Pengguna: ${users[index]['namapengguna']}"),
+                      Text("Role Pengguna: ${users[index]['Role']['role']}"),
+                    ],
+                  ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
                         icon: Icon(Icons.delete),
                         onPressed: () {
-                          // Call deleteRole function when delete button is pressed
+                          // Panggil fungsi deleteUser saat tombol delete ditekan dengan ID pengguna tertentu
                           deleteUser(users[index]['idpengguna']);
                         },
                       ),

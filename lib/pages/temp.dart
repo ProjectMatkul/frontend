@@ -31,6 +31,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
   TextEditingController idroleController = TextEditingController();
   TextEditingController fotoController = TextEditingController();
   String? imgUrl;
+  String? previousRoleValue;
 
   List<Map<String, dynamic>> roles = []; // List untuk menyimpan daftar peran
 
@@ -110,7 +111,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
           'username': usernameController.text,
           'password': passwordController.text,
           'namapengguna': namaController.text,
-          'idrole': idrole,
+          'idrole': idroleController.text,
           'status': status,
           'foto': imgUrl,
         }),
@@ -157,7 +158,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
             ),
             SizedBox(height: 16.0),
             FormBuilderDropdown(
-              key: Key('RoleDropdown'), // Tambahkan key di sini
+              key: Key('RoleDropdown'),
               name: 'idrole',
               decoration: InputDecoration(label: Text("Role Pengguna")),
               items: roles
@@ -167,8 +168,12 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
               onChanged: (dynamic value) {
                 setState(() {
                   idroleController.text = value.toString();
+                  previousRoleValue =
+                      value; // Set nilai sebelumnya saat dropdown diubah
                 });
               },
+              // Set nilai awal dropdown ke nilai sebelumnya jika sudah ada
+              initialValue: previousRoleValue ?? idrole,
             ),
             SizedBox(height: 16.0),
             DropdownButton<String>(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -13,13 +14,14 @@ class UpdateRolePage extends StatefulWidget {
 }
 
 class _UpdateRolePageState extends State<UpdateRolePage> {
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+  String status = '';
   String role = '';
-  String status = 'Aktif'; // Default status "Aktif"
   TextEditingController roleController = TextEditingController();
 
   Future<void> fetchRoleDetails() async {
     final url = Uri.parse(
-        'http://localhost:3000/api/pemilik/roleDetails/${widget.roleId}');
+        'http://10.0.2.2:3000/api/pemilik/roleDetails/${widget.roleId}');
 
     try {
       final response = await http.get(url);
@@ -48,8 +50,8 @@ class _UpdateRolePageState extends State<UpdateRolePage> {
   }
 
   Future<void> editRole() async {
-    final url = Uri.parse(
-        'http://localhost:3000/api/pemilik/editRole/${widget.roleId}');
+    final url =
+        Uri.parse('http://10.0.2.2:3000/api/pemilik/editRole/${widget.roleId}');
 
     try {
       final response = await http.put(
@@ -92,28 +94,21 @@ class _UpdateRolePageState extends State<UpdateRolePage> {
               decoration: InputDecoration(labelText: 'Role'),
             ),
             SizedBox(height: 16.0),
-            DropdownButton<String>(
-              value: status,
-              icon: Icon(Icons.arrow_downward),
-              iconSize: 24,
-              elevation: 16,
-              underline: Container(
-                height: 2,
-                color: Colors.blueAccent,
-              ),
-              onChanged: (String? newValue) {
+            FormBuilderDropdown(
+              name: 'status', // Nama field
+              decoration: InputDecoration(labelText: 'Status'), // Label
+              initialValue: status,
+              onChanged: (value) {
                 setState(() {
-                  status =
-                      newValue!; // Ubah nilai status langsung saat dropdown diubah
+                  status = value.toString(); // Ubah nilai status saat dipilih
                 });
               },
-              items: <String>['Aktif', 'Tidak Aktif']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
+              items: ['Aktif', 'Tidak Aktif']
+                  .map((status) => DropdownMenuItem(
+                        value: status,
+                        child: Text(status),
+                      ))
+                  .toList(),
             ),
             SizedBox(height: 24.0),
             ElevatedButton(

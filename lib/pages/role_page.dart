@@ -43,7 +43,7 @@ class _RoleListPageState extends State<RoleListPage> {
   }
 
   Future<void> deleteRole(int roleId) async {
-    final url = Uri.parse('http://localhost:3000/api/pemilik/deleteRole');
+    final url = Uri.parse('http://10.0.2.2:3000/api/pemilik/deleteRole');
 
     try {
       final response = await http.post(
@@ -70,7 +70,7 @@ class _RoleListPageState extends State<RoleListPage> {
 
   Future<void> fetchRoleDetails(int roleId) async {
     final url =
-        Uri.parse('http://localhost:3000/api/pemilik/roleDetails/$roleId');
+        Uri.parse('http://10.0.2.2:3000/api/pemilik/roleDetails/$roleId');
 
     try {
       final response = await http.get(url);

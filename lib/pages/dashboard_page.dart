@@ -31,15 +31,47 @@ class MyHomePage extends StatelessWidget {
 }
 
 class DashboardPage extends StatefulWidget {
-  final String accessToken; // Akses token disimpan di sini
+  final String accessToken; // Akses token disimpan di sin
 
-  DashboardPage({required this.accessToken});
+  DashboardPage({
+    required this.accessToken,
+  });
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+  Future<void> logout() async {
+    try {
+      final url = Uri.parse('http://10.0.2.2:3000/api/auth/logout');
+
+      final response = await http.post(
+        url,
+        headers: {
+          // 'cookie': 'warmindo-session=${widget.accessToken}; Path=/; HttpOnly;',
+          'Authorization': 'Bearer ${widget.accessToken}',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Jika logout berhasil, kembali ke halaman login
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoginPage(),
+          ),
+        );
+      } else {
+        final errorMessage = json.decode(response.body)['message'];
+        print(errorMessage);
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +90,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 const SizedBox(height: 50),
                 ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 30),
-                  title: Text('Halo Ahad!',
+                  title: Text('Halo!',
                       style: Theme.of(context)
                           .textTheme
                           .headlineSmall
@@ -68,10 +100,10 @@ class _DashboardPageState extends State<DashboardPage> {
                           .textTheme
                           .titleMedium
                           ?.copyWith(color: Colors.white54)),
-                  trailing: const CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage('assets/images/user.png'),
-                  ),
+                  // trailing: const CircleAvatar(
+                  //   radius: 30,
+                  //   backgroundImage: AssetImage('assets/images/user.png'),
+                  // ),
                 ),
                 const SizedBox(height: 30)
               ],
@@ -187,38 +219,48 @@ class _DashboardPageState extends State<DashboardPage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 16), // Add spacing
-                    Container(
-                      alignment: Alignment.bottomCenter,
-                      margin: EdgeInsets.only(
-                          bottom: 0), // Adjust the margin as needed
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          // Perform logout logic, clear session, etc.
-
-                          // Navigate to the login page
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoginPage(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          fixedSize: Size.fromHeight(40),
-                          primary: Colors.red,
-                          onPrimary: Colors.white,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.exit_to_app),
-                            const SizedBox(width: 10),
-                            Text('Logout'),
-                          ],
-                        ),
+                    Container(),
+                    ElevatedButton(
+                      onPressed: () async {
+                        logout();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Color.fromARGB(255, 255, 0, 0),
+                        onPrimary: Colors.white,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.exit_to_app),
+                          const SizedBox(height: 10),
+                          Text('Logout'),
+                        ],
                       ),
                     ),
+                    // SizedBox(height: 16), // Add spacing
+                    // Container(
+                    //   alignment: Alignment.bottomCenter,
+                    //   margin: EdgeInsets.only(
+                    //       bottom: 0), // Adjust the margin as needed
+                    //   child: ElevatedButton(
+                    //     onPressed: () async {
+                    //       logout();
+                    //     },
+                    //     style: ElevatedButton.styleFrom(
+                    //       fixedSize: Size.fromHeight(40),
+                    //       primary: Colors.red,
+                    //       onPrimary: Colors.white,
+                    //     ),
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.center,
+                    //       children: [
+                    //         Icon(Icons.exit_to_app),
+                    //         const SizedBox(width: 10),
+                    //         Text('Logout'),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
