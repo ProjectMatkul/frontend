@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 
 import 'dashboard_page.dart';
 import 'form_page.dart';
-import 'update_pengguna.dart';
 
 class UserListPage extends StatefulWidget {
   final String accessToken;
@@ -17,18 +16,6 @@ class UserListPage extends StatefulWidget {
 
 class _UserListPageState extends State<UserListPage> {
   List<dynamic> users = []; // Simpan data pengguna di sini
-
-  void navigateToUpdatePenggunaPage(String penggunaId) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => UpdatePenggunaPage(
-          accessToken: widget.accessToken,
-          penggunaId: penggunaId,
-        ),
-      ),
-    );
-  }
 
   Future<void> fetchUsers() async {
     final url = Uri.parse('http://10.0.2.2:3000/api/pemilik/viewUser');
@@ -153,8 +140,6 @@ class _UserListPageState extends State<UserListPage> {
                         icon: Icon(Icons.edit),
                         onPressed: () {
                           // Panggil fungsi navigateToUpdateUserPage saat tombol edit ditekan dengan ID pengguna tertentu
-                          navigateToUpdatePenggunaPage(
-                              users[index]['idpengguna']);
                         },
                       ),
                     ],
