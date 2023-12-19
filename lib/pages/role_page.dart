@@ -17,6 +17,10 @@ class RoleListPage extends StatefulWidget {
 
 class _RoleListPageState extends State<RoleListPage> {
   List<dynamic> roles = []; // Simpan data role di sini
+  String role = ''; // Deklarasikan variabel role
+  String status = ''; // Deklarasikan variabel status
+  TextEditingController roleController =
+      TextEditingController(); // Deklarasikan roleController
 
   Future<void> fetchRoles() async {
     final url = Uri.parse('http://localhost:3000/api/pemilik/viewRole');
@@ -64,7 +68,34 @@ class _RoleListPageState extends State<RoleListPage> {
     }
   }
 
-  void navigateToUpdateRolePage(int roleId) {
+  Future<void> fetchRoleDetails(int roleId) async {
+    final url =
+        Uri.parse('http://localhost:3000/api/pemilik/roleDetails/$roleId');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        setState(() {
+          role = responseData['role'];
+          status = responseData['status'];
+          roleController.text = role;
+        });
+      } else {
+        // Tangani jika gagal mendapatkan detail role
+        print('Gagal mendapatkan detail role');
+      }
+    } catch (error) {
+      // Tangani error dari HTTP request
+      print('Error: $error');
+    }
+  }
+
+  void navigateToUpdateRolePage(int roleId) async {
+    // Panggil fetchRoleDetails sebelum navigasi ke halaman UpdateRolePage
+    await fetchRoleDetails(roleId);
+
     Navigator.push(
       context,
       MaterialPageRoute(

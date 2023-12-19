@@ -17,41 +17,6 @@ class _UpdateRolePageState extends State<UpdateRolePage> {
   String status = 'Aktif'; // Default status "Aktif"
   TextEditingController roleController = TextEditingController();
 
-  Future<void> editRole() async {
-    final url = Uri.parse('http://localhost:3000/api/pemilik/editRole');
-
-    try {
-      final response = await http.put(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: json.encode({
-          'idrole': widget.roleId,
-          'role': roleController.text,
-          'status': status,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        print(responseData['message']); // Show backend response message
-        Navigator.pop(context); // Kembali ke halaman sebelumnya
-      } else {
-        final errorMessage = json.decode(response.body)['message'];
-        print(errorMessage);
-      }
-    } catch (error) {
-      print('Error: $error');
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fetchRoleDetails(); // Panggil fungsi untuk mendapatkan detail role saat inisialisasi halaman
-  }
-
   Future<void> fetchRoleDetails() async {
     final url = Uri.parse(
         'http://localhost:3000/api/pemilik/roleDetails/${widget.roleId}');
@@ -72,6 +37,41 @@ class _UpdateRolePageState extends State<UpdateRolePage> {
       }
     } catch (error) {
       // Tangani error dari HTTP request
+      print('Error: $error');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchRoleDetails(); // Panggil fungsi untuk mendapatkan detail role saat inisialisasi halaman
+  }
+
+  Future<void> editRole() async {
+    final url = Uri.parse(
+        'http://localhost:3000/api/pemilik/editRole/${widget.roleId}');
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'role': roleController.text,
+          'status': status,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        print(responseData['message']); // Show backend response message
+        Navigator.pop(context); // Kembali ke halaman sebelumnya
+      } else {
+        final errorMessage = json.decode(response.body)['message'];
+        print(errorMessage);
+      }
+    } catch (error) {
       print('Error: $error');
     }
   }
@@ -103,7 +103,8 @@ class _UpdateRolePageState extends State<UpdateRolePage> {
               ),
               onChanged: (String? newValue) {
                 setState(() {
-                  status = newValue!;
+                  status =
+                      newValue!; // Ubah nilai status langsung saat dropdown diubah
                 });
               },
               items: <String>['Aktif', 'Tidak Aktif']
