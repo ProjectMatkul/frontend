@@ -32,7 +32,7 @@ class _UserListPageState extends State<UserListPage> {
   TextEditingController fotoController = TextEditingController();
 
   Future<void> fetchUsers() async {
-    final url = Uri.parse('http://localhost:3000/api/pemilik/viewUser');
+    final url = Uri.parse('http://10.0.2.2:3000/api/pemilik/viewUser');
 
     try {
       final response = await http.get(url);
@@ -52,7 +52,7 @@ class _UserListPageState extends State<UserListPage> {
   }
 
   Future<void> deleteUser(String userId) async {
-    final url = Uri.parse('http://localhost:3000/api/pemilik/deleteUser');
+    final url = Uri.parse('http://10.0.2.2:3000/api/pemilik/deleteUser');
 
     try {
       final response = await http.post(
@@ -131,9 +131,14 @@ class _UserListPageState extends State<UserListPage> {
 
   @override
   Widget build(BuildContext context) {
+    String accessToken = widget.accessToken;
+
+// Menggunakan nilai dari accessToken sebagai indeks (misalnya, dengan mengonversi ke int)
+    int index = int.tryParse(accessToken) ?? 0;
     return Scaffold(
       appBar: AppBar(
         title: Text('Daftar Pengguna'),
+        centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
