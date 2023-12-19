@@ -82,6 +82,7 @@ class _UpdateRolePageState extends State<UpdateRolePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text('Update Role'),
       ),
       body: Padding(
