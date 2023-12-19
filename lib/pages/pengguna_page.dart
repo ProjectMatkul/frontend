@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:warmindo_app/pages/update_pengguna.dart';
 
 import 'dashboard_page.dart';
 import 'form_page.dart';
@@ -16,24 +17,32 @@ class UserListPage extends StatefulWidget {
 
 class _UserListPageState extends State<UserListPage> {
   List<dynamic> users = []; // Simpan data pengguna di sini
+  String username = '';
+  String password = '';
+  String namapengguna = '';
+  String idrole = '';
+  String status = '';
+  String foto = '';
+
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController namaController = TextEditingController();
+  TextEditingController idroleController = TextEditingController();
+  TextEditingController statusController = TextEditingController();
+  TextEditingController fotoController = TextEditingController();
 
   Future<void> fetchUsers() async {
     final url = Uri.parse('http://10.0.2.2:3000/api/pemilik/viewUser');
 
     try {
-      final response = await http.get(
-        url,
-        headers: {
-          'Authorization': 'Bearer ${widget.accessToken}',
-        },
-      );
+      final response = await http.get(url);
 
       if (response.statusCode == 200) {
         setState(() {
           users = json.decode(response.body);
         });
       } else {
-        // Tangani jika gagal mendapatkan data pengguna
+        // Tangani jika gagal mendapatkan data role
         print('Gagal mendapatkan data pengguna');
       }
     } catch (error) {
@@ -66,6 +75,52 @@ class _UserListPageState extends State<UserListPage> {
     } catch (error) {
       print('Error: $error');
     }
+  }
+
+  Future<void> fetchUserDetails(String userId) async {
+    final url =
+        Uri.parse('http://localhost:3000/api/pemilik/userDetails/$userId');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        setState(() {
+          username = responseData['username'];
+          password = responseData['password'];
+          namapengguna = responseData['namapengguna'];
+          idrole = responseData['idrole'];
+          status = responseData['status'];
+          foto = responseData['foto'];
+          usernameController.text = username;
+          passwordController.text = password;
+          namaController.text = namapengguna;
+          idroleController.text = idrole;
+          fotoController.text = foto;
+        });
+      } else {
+        // Tangani jika gagal mendapatkan detail role
+        print('Gagal mendapatkan detail pengguna');
+      }
+    } catch (error) {
+      // Tangani error dari HTTP request
+      print('Error: $error');
+    }
+  }
+
+  void navigateToUpdateUserPage(String userId) async {
+    await fetchUserDetails(userId);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UpdateUserPage(
+          accessToken: widget.accessToken,
+          userId: userId,
+        ),
+      ),
+    );
   }
 
   @override
@@ -106,42 +161,13 @@ class _UserListPageState extends State<UserListPage> {
               itemCount: users.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(users[index]['foto']),
-                  ),
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "ID Pengguna: ${users[index]['idpengguna']}",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text("Username: ${users[index]['username']}"),
-                      // Text("Password: ${users[index]['password']}"),
-                      Text("Nama Pengguna: ${users[index]['namapengguna']}"),
-                      Text("Role Pengguna: ${users[index]['Role']['role']}"),
-                    ],
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          // Panggil fungsi deleteUser saat tombol delete ditekan dengan ID pengguna tertentu
-                          deleteUser(users[index]['idpengguna']);
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          // Panggil fungsi navigateToUpdateUserPage saat tombol edit ditekan dengan ID pengguna tertentu
-                        },
-                      ),
-                    ],
+                  title: Text(users[index]['username']),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      // Panggil fungsi deleteUser saat tombol delete ditekan dengan ID pengguna tertentu
+                      deleteUser(users[index]['idpengguna']);
+                    },
                   ),
                   // Tambahkan informasi pengguna lainnya sesuai kebutuhan
                 );

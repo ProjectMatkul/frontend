@@ -18,7 +18,7 @@ class _UpdateRolePageState extends State<UpdateRolePage> {
   TextEditingController roleController = TextEditingController();
 
   Future<void> editRole() async {
-    final url = Uri.parse('http://10.0.2.2:3000/api/pemilik/editRole');
+    final url = Uri.parse('http://localhost:3000/api/pemilik/editRole');
 
     try {
       final response = await http.put(
@@ -77,6 +77,41 @@ class _UpdateRolePageState extends State<UpdateRolePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    fetchRoleDetails(); // Panggil fungsi untuk mendapatkan detail role saat inisialisasi halaman
+  }
+
+  Future<void> editRole() async {
+    final url = Uri.parse(
+        'http://localhost:3000/api/pemilik/editRole/${widget.roleId}');
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'role': roleController.text,
+          'status': status,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        print(responseData['message']); // Show backend response message
+        Navigator.pop(context); // Kembali ke halaman sebelumnya
+      } else {
+        final errorMessage = json.decode(response.body)['message'];
+        print(errorMessage);
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -103,7 +138,8 @@ class _UpdateRolePageState extends State<UpdateRolePage> {
               ),
               onChanged: (String? newValue) {
                 setState(() {
-                  status = newValue!;
+                  status =
+                      newValue!; // Ubah nilai status langsung saat dropdown diubah
                 });
               },
               items: <String>['Aktif', 'Tidak Aktif']
