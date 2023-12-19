@@ -17,7 +17,7 @@ class _FormRolePageState extends State<FormRolePage> {
   TextEditingController roleController = TextEditingController();
 
   Future<void> addRole() async {
-    final url = Uri.parse('http://localhost:3000/api/pemilik/addRole');
+    final url = Uri.parse('http://10.0.2.2:3000/api/pemilik/addRole');
 
     try {
       final response = await http.post(

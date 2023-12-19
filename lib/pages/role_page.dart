@@ -23,7 +23,7 @@ class _RoleListPageState extends State<RoleListPage> {
       TextEditingController(); // Deklarasikan roleController
 
   Future<void> fetchRoles() async {
-    final url = Uri.parse('http://localhost:3000/api/pemilik/viewRole');
+    final url = Uri.parse('http://10.0.2.2:3000/api/pemilik/viewRole');
 
     try {
       final response = await http.get(url);
@@ -118,6 +118,7 @@ class _RoleListPageState extends State<RoleListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Daftar Role'),
+        centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -140,7 +141,17 @@ class _RoleListPageState extends State<RoleListPage> {
               itemCount: roles.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(roles[index]['role']),
+                  title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "ID Role: ${roles[index]['idrole']}",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        Text("Role: ${roles[index]['role']}"),
+                        Text("Status: ${roles[index]['status']}"),
+                      ]),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

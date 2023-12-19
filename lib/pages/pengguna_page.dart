@@ -32,7 +32,7 @@ class _UserListPageState extends State<UserListPage> {
   TextEditingController fotoController = TextEditingController();
 
   Future<void> fetchUsers() async {
-    final url = Uri.parse('http://localhost:3000/api/pemilik/viewUser');
+    final url = Uri.parse('http://10.0.2.2:3000/api/pemilik/viewUser');
 
     try {
       final response = await http.get(url);
@@ -52,7 +52,7 @@ class _UserListPageState extends State<UserListPage> {
   }
 
   Future<void> deleteUser(String userId) async {
-    final url = Uri.parse('http://localhost:3000/api/pemilik/deleteUser');
+    final url = Uri.parse('http://10.0.2.2:3000/api/pemilik/deleteUser');
 
     try {
       final response = await http.post(
@@ -131,9 +131,14 @@ class _UserListPageState extends State<UserListPage> {
 
   @override
   Widget build(BuildContext context) {
+    String accessToken = widget.accessToken;
+
+// Menggunakan nilai dari accessToken sebagai indeks (misalnya, dengan mengonversi ke int)
+    int index = int.tryParse(accessToken) ?? 0;
     return Scaffold(
       appBar: AppBar(
         title: Text('Daftar Pengguna'),
+        centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -142,6 +147,7 @@ class _UserListPageState extends State<UserListPage> {
               MaterialPageRoute(
                 builder: (context) => DashboardPage(
                   accessToken: widget.accessToken,
+                  idpengguna: users[index]['idpengguna'],
                 ),
               ),
             );
@@ -156,27 +162,15 @@ class _UserListPageState extends State<UserListPage> {
               itemCount: users.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(users[index]['namapengguna']),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          // Call deleteRole function when delete button is pressed
-                          deleteUser(users[index]['idpengguna']);
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          // Call navigateToUpdateRolePage function when edit button is pressed
-                          navigateToUpdateUserPage(users[index]['idpengguna']);
-                        },
-                      ),
-                    ],
+                  title: Text(users[index]['username']),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      // Panggil fungsi deleteUser saat tombol delete ditekan dengan ID pengguna tertentu
+                      deleteUser(users[index]['idpengguna']);
+                    },
                   ),
-                  // Tambahkan informasi role lainnya sesuai kebutuhan
+                  // Tambahkan informasi pengguna lainnya sesuai kebutuhan
                 );
               },
             ),
