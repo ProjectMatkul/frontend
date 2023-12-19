@@ -41,8 +41,8 @@ class _FormPageState extends State<FormPage> {
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         print(responseData['message']);
-        Navigator.pop(
-            context); // Kembali ke halaman sebelumnya setelah berhasil menambahkan pengguna
+        Navigator.pop(context,
+            true); // Kembali ke halaman sebelumnya setelah berhasil menambahkan pengguna
       } else {
         final errorMessage = json.decode(response.body)['message'];
         print(errorMessage);
