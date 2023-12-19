@@ -92,7 +92,6 @@ class _UserListPageState extends State<UserListPage> {
               MaterialPageRoute(
                 builder: (context) => DashboardPage(
                   accessToken: widget.accessToken,
-                  idpengguna: users[index]['idpengguna'],
                 ),
               ),
             );

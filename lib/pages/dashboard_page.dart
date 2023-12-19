@@ -14,38 +14,6 @@ void main() {
   runApp(const MyHomePage());
 }
 
-// frontend
-Future<void> logout(BuildContext context, String accessToken) async {
-  final url = Uri.parse('http://10.0.2.2:3000/api/auth/logout');
-  try {
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-      print(responseData['message']);
-
-      // Navigasi ke halaman login setelah logout berhasil
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => LoginPage(),
-        ),
-      );
-    } else {
-      final errorMessage = json.decode(response.body)['message'];
-      print(errorMessage);
-    }
-  } catch (error) {
-    print('Error: $error');
-  }
-}
-
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
@@ -64,9 +32,8 @@ class MyHomePage extends StatelessWidget {
 
 class DashboardPage extends StatefulWidget {
   final String accessToken; // Akses token disimpan di sini
-  final String idpengguna; // Tambahkan atribut userId
 
-  DashboardPage({required this.accessToken, required this.idpengguna});
+  DashboardPage({required this.accessToken});
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
@@ -227,8 +194,15 @@ class _DashboardPageState extends State<DashboardPage> {
                           bottom: 0), // Adjust the margin as needed
                       child: ElevatedButton(
                         onPressed: () async {
-                          // Panggil fungsi logout dengan menyediakan parameter context
-                          await logout(context, widget.accessToken);
+                          // Perform logout logic, clear session, etc.
+
+                          // Navigate to the login page
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginPage(),
+                            ),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           fixedSize: Size.fromHeight(40),
